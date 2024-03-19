@@ -1,4 +1,5 @@
-use std::io::Write;
+use core::num;
+use std::{io::{Read, Write}, ptr::null};
 
 use clearscreen::{self, clear};
 
@@ -26,7 +27,6 @@ fn main() {
         else if inputbuffer=='d'{
             showcontents(&todoos);
         }
-
     }
 }
 
@@ -35,11 +35,11 @@ fn addtodo(todoos: &mut Vec<ListObject>){
     let mut name:String = String::new();
     let mut content:String = String::new();
     print!("name: ");
-    std::io::stdout().flush();
+    std::io::stdout().flush().unwrap();
     std::io::stdin().read_line(&mut name).unwrap();
     clear().unwrap();
     print!("contnent: ");
-    std::io::stdout().flush();
+    std::io::stdout().flush().unwrap();
     std::io::stdin().read_line(&mut content).unwrap();
     clear().unwrap();
     name.pop();
@@ -60,5 +60,19 @@ fn displaylist(todoos: &Vec<ListObject>){
 
 fn showcontents(todoos: &Vec<ListObject>){
     displaylist(todoos);
-    print!("\n")
+    let mut inputbuffer: String = String::new();
+    print!("\ncontent ID: ");
+    std::io::stdout().flush().unwrap();
+    std::io::stdin().read_line(&mut inputbuffer).unwrap();
+    let inputbuffer:u8 = match inputbuffer.trim().parse(){
+        Ok(num) => num,
+        Err(_) => return,
+    };
+    if inputbuffer > todoos.len() as u8{
+        return;
+    }
+    println!("\n{}", todoos[inputbuffer as usize].content);
+    print!("\npress enter to continue... ");
+    std::io::stdout().flush().unwrap();
+    std::io::stdin().read(&mut[0]).unwrap();
 }
