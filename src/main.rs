@@ -102,7 +102,7 @@ fn removeeliment(todoos: &mut Vec<ListObject>){
         Ok(num) => num,
         Err(_) => return,
     };
-    if inputbuffer > (todoos.len()-1) as u8{
+    if inputbuffer+1 > todoos.len() as u8{
         return;
     }
     todoos.remove(inputbuffer as usize);
@@ -124,7 +124,7 @@ fn togglecompletion(todoos: &mut Vec<ListObject>){
         Ok(num) => num,
         Err(_) => return,
     };
-    if inputbuffer > (todoos.len()-1) as u8{
+    if inputbuffer+1 > todoos.len() as u8{
         return;
     }
     if todoos[inputbuffer as usize].completed == true{
