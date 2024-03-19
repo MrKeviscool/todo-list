@@ -1,9 +1,5 @@
-use core::num;
-use std::{io::{Read, Write}, ptr::null};
-
 use clearscreen::{self, clear};
-
-#[derive(Debug)]
+use std::io::{Write, Read};
 struct ListObject{
     name:String,
     content:String,
@@ -26,6 +22,9 @@ fn main() {
         }
         else if inputbuffer=='d'{
             showcontents(&todoos);
+        }
+        else if inputbuffer == 's'{
+            removeeliment(&mut todoos);
         }
     }
 }
@@ -75,4 +74,20 @@ fn showcontents(todoos: &Vec<ListObject>){
     print!("\npress enter to continue... ");
     std::io::stdout().flush().unwrap();
     std::io::stdin().read(&mut[0]).unwrap();
+}
+
+fn removeeliment(todoos: &mut Vec<ListObject>){
+    displaylist(todoos);
+    let mut inputbuffer: String = String::new();
+    print!("\nremove ID: ");
+    std::io::stdout().flush().unwrap();
+    std::io::stdin().read_line(&mut inputbuffer).unwrap();
+    let inputbuffer:u8 = match inputbuffer.trim().parse(){
+        Ok(num) => num,
+        Err(_) => return,
+    };
+    if inputbuffer > todoos.len() as u8{
+        return;
+    }
+    todoos.remove(inputbuffer as usize);
 }
