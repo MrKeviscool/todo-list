@@ -100,6 +100,7 @@ fn removeeliment(todoos: &mut Vec<ListObject>){
         for i in (0..todoos.len()).rev(){
             if todoos[i].completed == true {
                 todoos.remove(i);
+                return;
             }
         }
     }
