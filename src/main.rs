@@ -55,7 +55,7 @@ fn displaylist(todoos: &Vec<ListObject>){
     clear().unwrap();
     println!("id: completed:  name:");
     for i in 0..todoos.len(){
-        if(todoos[i].completed == false){
+        if todoos[i].completed == false {
             println!(" {}  [{}]     {}", i, todoos[i].completed, todoos[i].name);
         }
         else{
