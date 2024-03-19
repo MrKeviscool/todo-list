@@ -55,7 +55,12 @@ fn displaylist(todoos: &Vec<ListObject>){
     clear().unwrap();
     println!("id: completed:  name:");
     for i in 0..todoos.len(){
-        println!(" {}  [{}]     {}", i, todoos[i].completed, todoos[i].name);
+        if(todoos[i].completed == false){
+            println!(" {}  [{}]     {}", i, todoos[i].completed, todoos[i].name);
+        }
+        else{
+            println!(" {}  [{}]      {}", i, todoos[i].completed, todoos[i].name);
+        }
     }
     std::io::stdout().flush().unwrap();
 
