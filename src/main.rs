@@ -1,6 +1,10 @@
 use clearscreen::{self, clear};
 use std::io::{Read, Write};
+use std::fs::read_to_string;
 
+const SAVEPATH: &str = "/home/daniel/data.txt";
+
+//#[derive(Debug)]
 struct ListObject{
     name:String,
     content:String,
@@ -9,6 +13,7 @@ struct ListObject{
 
 fn main() {
     let mut todoos:Vec<ListObject> = Vec::new();
+    loadsaved(&mut todoos);
     loop{
         displaylist(&todoos);
         let mut inputbuffer:String = String::new();
@@ -139,4 +144,34 @@ fn togglecompletion(todoos: &mut Vec<ListObject>){
     else{
         todoos[inputbuffer as usize].completed = true;
     }
+}
+
+fn loadsaved(todoos: &mut Vec<ListObject>){
+    let mut buff:String = String::new();
+    let mut name:String = String::new();
+    let mut data:String = String::new();
+    let filecontent: String = read_to_string(SAVEPATH).unwrap();
+    for i in filecontent.chars(){
+        buff.push(i);
+        if i =='-'{
+            name = buff.clone();
+            buff.clear();
+        }
+        else if i=='_'{
+            data=buff.clone();
+            buff.clear();
+        }
+        else if i=='\n'{
+            let mut completed:bool = false;
+            if (buff.chars().count()-1 < 5){
+                completed = true;
+            }
+            name.pop();
+            data.pop();
+            todoos.push(ListObject{name:name.clone(), content:data.clone(), completed});
+            //println!("{:?}", todoos);
+            buff.clear();
+        }
+    }
+    
 }
