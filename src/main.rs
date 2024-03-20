@@ -3,8 +3,9 @@ use std::io::{Read, Write};
 use std::fs:: read_to_string;
 use std::fs::File;
 use std::path::Path;
+use homedir::{self, get_my_home};
 
-const SAVEPATH: &str = "/home/daniel/.config/ToDo_data";
+//const &save_path: &str = "/home/daniel/.config/ToDo_data";
 
 //#[derive(Debug)]
 struct ListObject{
@@ -13,12 +14,16 @@ struct ListObject{
     completed:bool 
 }
 
+//let mut &save_path = get_my_home().unwrap().unwrap().into_os_string().into_string().unwrap();
+
 fn main() {
+    let mut save_path =get_my_home().unwrap().unwrap().to_string_lossy().to_string();
+    save_path.push_str("/.config/ToDo_data");
     let mut todoos:Vec<ListObject> = Vec::new();
-    if !Path::new(SAVEPATH).exists(){savetofile(&mut todoos);}
-    loadsaved(&mut todoos);
+    if !Path::new(&save_path).exists(){savetofile(&mut todoos, &save_path);}
+    loadsaved(&mut todoos, &save_path);
     loop{
-        savetofile(&mut todoos);
+        savetofile(&mut todoos, &save_path);
         displaylist(&todoos);
         let mut inputbuffer:String = String::new();
         println!("\n\n[A]dd [S]crap [D]isplay-content [F]inish-task");
@@ -150,11 +155,11 @@ fn togglecompletion(todoos: &mut Vec<ListObject>){
     }
 }
 
-fn loadsaved(todoos: &mut Vec<ListObject>){
+fn loadsaved(todoos: &mut Vec<ListObject>, save_path: &String){
     let mut buff:String = String::new();
     let mut name:String = String::new();
     let mut data:String = String::new();
-    let filecontent: String = read_to_string(SAVEPATH).unwrap();
+    let filecontent: String = read_to_string(&save_path).unwrap();
     for i in filecontent.chars(){
         buff.push(i);
         if i =='-'{
@@ -180,8 +185,8 @@ fn loadsaved(todoos: &mut Vec<ListObject>){
     
 }
 
-fn savetofile(todoos: &mut Vec<ListObject>){
-    let mut file = File::create(SAVEPATH).unwrap();
+fn savetofile(todoos: &mut Vec<ListObject>, save_path: &String){
+    let mut file = File::create(&save_path).unwrap();
     for i in todoos{
         write!(file, "{}-{}_{}\n", i.name, i.content, i.completed).unwrap();
     }
