@@ -1,6 +1,9 @@
 use clearscreen::{self, clear};
 use std::io::{Read, Write};
-use std::fs::read_to_string;
+use std::fs:: read_to_string;
+use std::fs::File;
+use std::path::Path;
+use std::process::exit;
 
 const SAVEPATH: &str = "/home/daniel/data.txt";
 
@@ -13,8 +16,10 @@ struct ListObject{
 
 fn main() {
     let mut todoos:Vec<ListObject> = Vec::new();
+    if !Path::new(SAVEPATH).exists(){savetofile(&mut todoos);}
     loadsaved(&mut todoos);
     loop{
+        savetofile(&mut todoos);
         displaylist(&todoos);
         let mut inputbuffer:String = String::new();
         println!("\n\n[A]dd [S]crap [D]isplay-content [F]inish-task");
@@ -163,7 +168,7 @@ fn loadsaved(todoos: &mut Vec<ListObject>){
         }
         else if i=='\n'{
             let mut completed:bool = false;
-            if (buff.chars().count()-1 < 5){
+            if buff.chars().count()-1 < 5 {
                 completed = true;
             }
             name.pop();
@@ -174,4 +179,13 @@ fn loadsaved(todoos: &mut Vec<ListObject>){
         }
     }
     
+}
+
+fn savetofile(todoos: &mut Vec<ListObject>){
+    let mut file = File::create(SAVEPATH).unwrap();
+    for i in todoos{
+        write!(file, "{}-{}_{}\n", i.name, i.content, i.completed).unwrap();
+    }
+    
+
 }
