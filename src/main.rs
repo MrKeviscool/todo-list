@@ -3,9 +3,8 @@ use std::io::{Read, Write};
 use std::fs:: read_to_string;
 use std::fs::File;
 use std::path::Path;
-use std::process::exit;
 
-const SAVEPATH: &str = "/home/daniel/data.txt";
+const SAVEPATH: &str = "/home/daniel/.config/ToDo_data";
 
 //#[derive(Debug)]
 struct ListObject{
