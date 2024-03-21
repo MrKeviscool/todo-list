@@ -102,7 +102,7 @@ fn showcontents(todoos: &Vec<ListObject>){
 fn removeeliment(todoos: &mut Vec<ListObject>){
     displaylist(todoos);
     let mut inputbuffer: String = String::new();
-    print!("\nA for all. D for all done.   remove ID: ");
+    print!("\nA for all. D for all done.   todo ID: ");
     std::io::stdout().flush().unwrap();
     std::io::stdin().read_line(&mut inputbuffer).unwrap();
     if inputbuffer.chars().nth(0).unwrap().to_ascii_lowercase() == 'a'
@@ -131,7 +131,7 @@ fn removeeliment(todoos: &mut Vec<ListObject>){
 fn togglecompletion(todoos: &mut Vec<ListObject>){
     displaylist(todoos);
     let mut inputbuffer: String = String::new();
-    print!("\nA for all.  complete ID: ");
+    print!("\nA for all.  todo ID: ");
     std::io::stdout().flush().unwrap();
     std::io::stdin().read_line(&mut inputbuffer).unwrap();
     if inputbuffer.chars().nth(0).unwrap().to_ascii_lowercase() == 'a'{
@@ -162,11 +162,11 @@ fn loadsaved(todoos: &mut Vec<ListObject>, save_path: &String){
     let filecontent: String = read_to_string(&save_path).unwrap();
     for i in filecontent.chars(){
         buff.push(i);
-        if i =='-'{
+        if i =='█'{
             name = buff.clone();
             buff.clear();
         }
-        else if i=='_'{
+        else if i=='║'{
             data=buff.clone();
             buff.clear();
         }
@@ -188,8 +188,6 @@ fn loadsaved(todoos: &mut Vec<ListObject>, save_path: &String){
 fn savetofile(todoos: &mut Vec<ListObject>, save_path: &String){
     let mut file = File::create(&save_path).unwrap();
     for i in todoos{
-        write!(file, "{}-{}_{}\n", i.name, i.content, i.completed).unwrap();
+        write!(file, "{}█{}║{}\n", i.name, i.content, i.completed).unwrap();
     }
-    
-
 }
