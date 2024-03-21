@@ -111,10 +111,9 @@ fn removeeliment(todoos: &mut Vec<ListObject>){
         return;
     }
     else if inputbuffer.chars().nth(0).unwrap().to_ascii_lowercase() == 'd'{
-        for i in (0..todoos.len()).rev(){
+        for i in (0..todoos.len()-1){
             if todoos[i].completed == true {
                 todoos.remove(i);
-                return;
             }
         }
     }
