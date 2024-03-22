@@ -21,7 +21,7 @@ fn main() {
         savetofile(&mut todoos, &save_path);
         displaylist(&todoos);
         let mut inputbuffer:String = String::new();
-        println!("\n\n[A]dd [S]crap [D]isplay-content [F]inish-task");
+        println!("\n[A]dd [S]crap [D]isplay-content [F]inish-task");
         print!("command: ");
         std::io::stdout().flush().unwrap();
         std::io::stdin().read_line(&mut inputbuffer).unwrap();
