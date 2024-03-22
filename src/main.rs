@@ -5,16 +5,11 @@ use std::fs::File;
 use std::path::Path;
 use homedir::{self, get_my_home};
 
-//const &save_path: &str = "/home/daniel/.config/ToDo_data";
-
-//#[derive(Debug)]
 struct ListObject{
     name:String,
     content:String,
     completed:bool 
 }
-
-//let mut &save_path = get_my_home().unwrap().unwrap().into_os_string().into_string().unwrap();
 
 fn main() {
     let mut save_path =get_my_home().unwrap().unwrap().to_string_lossy().to_string();
