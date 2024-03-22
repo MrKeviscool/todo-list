@@ -172,7 +172,6 @@ fn loadsaved(todoos: &mut Vec<ListObject>, save_path: &String){
             name.pop();
             data.pop();
             todoos.push(ListObject{name:name.clone(), content:data.clone(), completed});
-            //println!("{:?}", todoos);
             buff.clear();
         }
     }
