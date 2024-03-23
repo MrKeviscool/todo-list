@@ -115,7 +115,7 @@ fn removeeliment(todoos: &mut Vec<ListObject>){
         Ok(num) => num,
         Err(_) => return
     };
-    if inputbuffer > todoos.len() as u8 || inputbuffer <= 0{     //WAS 'if inputbuffer+1 > todoos.len() as u8{' WHY??? WHY +1 HERE BUT NOT IN THE SHOW CONTENTS ONE
+    if inputbuffer > todoos.len() as u8 || inputbuffer <= 0{
         return;
     }
     todoos.remove(inputbuffer as usize-1);
