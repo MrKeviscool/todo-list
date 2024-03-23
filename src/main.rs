@@ -16,7 +16,7 @@ fn main() {
     save_path.push_str("/.config/ToDo_data");
     let mut todoos:Vec<ListObject> = Vec::new();
     if !Path::new(&save_path).exists(){savetofile(&mut todoos, &save_path);}
-    loadsaved(&mut todoos, &save_path);
+    else{loadsaved(&mut todoos, &save_path);}
     loop{
         savetofile(&mut todoos, &save_path);
         displaylist(&todoos);
@@ -65,14 +65,13 @@ fn displaylist(todoos: &Vec<ListObject>){
     println!("id: completed:  name:");
     for i in 0..todoos.len(){
         if todoos[i].completed == false {
-            println!(" {}  [{}]     {}", i, todoos[i].completed, todoos[i].name);
+            println!(" {}  [{}]     {}", i+1, todoos[i].completed, todoos[i].name);
         }
         else{
-            println!(" {}  [{}]      {}", i, todoos[i].completed, todoos[i].name);
+            println!(" {}  [{}]      {}", i+1, todoos[i].completed, todoos[i].name);
         }
     }
     std::io::stdout().flush().unwrap();
-
 }
 
 fn showcontents(todoos: &Vec<ListObject>){
@@ -85,10 +84,10 @@ fn showcontents(todoos: &Vec<ListObject>){
         Ok(num) => num,
         Err(_) => return,
     };
-    if inputbuffer > todoos.len() as u8{
+    if inputbuffer > todoos.len() as u8 || inputbuffer <= 0{
         return;
     }
-    println!("\n{}", todoos[inputbuffer as usize].content);
+    println!("\n{}", todoos[inputbuffer as usize-1].content);
     print!("\npress enter to continue... ");
     std::io::stdout().flush().unwrap();
     std::io::stdin().read(&mut[0]).unwrap();
@@ -114,12 +113,12 @@ fn removeeliment(todoos: &mut Vec<ListObject>){
     }
     let inputbuffer:u8 = match inputbuffer.trim().parse(){
         Ok(num) => num,
-        Err(_) => return,
+        Err(_) => return
     };
-    if inputbuffer+1 > todoos.len() as u8{
+    if inputbuffer > todoos.len() as u8 || inputbuffer <= 0{     //WAS 'if inputbuffer+1 > todoos.len() as u8{' WHY??? WHY +1 HERE BUT NOT IN THE SHOW CONTENTS ONE
         return;
     }
-    todoos.remove(inputbuffer as usize);
+    todoos.remove(inputbuffer as usize-1);
 }
 
 fn togglecompletion(todoos: &mut Vec<ListObject>){
@@ -134,13 +133,15 @@ fn togglecompletion(todoos: &mut Vec<ListObject>){
         }
         return;
     }
-    let inputbuffer:u8 = match inputbuffer.trim().parse(){
+    let mut inputbuffer:u8 = match inputbuffer.trim().parse(){
         Ok(num) => num,
         Err(_) => return,
     };
-    if inputbuffer+1 > todoos.len() as u8{
+
+    if inputbuffer > todoos.len() as u8 || inputbuffer <= 0{
         return;
     }
+    inputbuffer-=1;
     if todoos[inputbuffer as usize].completed == true{
         todoos[inputbuffer as usize].completed = false;
     }
@@ -172,7 +173,6 @@ fn loadsaved(todoos: &mut Vec<ListObject>, save_path: &String){
             name.pop();
             data.pop();
             todoos.push(ListObject{name:name.clone(), content:data.clone(), completed});
-            //println!("{:?}", todoos);
             buff.clear();
         }
     }
