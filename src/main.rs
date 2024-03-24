@@ -7,13 +7,12 @@ use homedir::{self, get_my_home};
 
 struct ListObject{
     name:String,
-    content:String,
-    completed:bool 
+    content:String 
 }
 
 fn main() {
     let mut save_path =get_my_home().unwrap().unwrap().to_string_lossy().to_string();
-    save_path.push_str("/.config/ToDo_data");
+    save_path.push_str("/.config/ToDo_dataBETA");
     let mut todoos:Vec<ListObject> = Vec::new();
     if !Path::new(&save_path).exists(){savetofile(&mut todoos, &save_path);}
     else{loadsaved(&mut todoos, &save_path);}
@@ -37,13 +36,13 @@ fn main() {
             removeeliment(&mut todoos);
         }
         else if inputbuffer == 'f'{
-            togglecompletion(&mut todoos);
+            //togglecompletion(&mut todoos);
         }
     }
 }
 
 fn addtodo(todoos: &mut Vec<ListObject>){
-    let completed:bool = false;
+    //let completed:bool = false;
     let mut name:String = String::new();
     let mut content:String = String::new();
     print!("name: ");
@@ -56,7 +55,7 @@ fn addtodo(todoos: &mut Vec<ListObject>){
     clear().unwrap();
     name.pop();
     content.pop();
-    todoos.push(ListObject{completed, name, content});
+    todoos.push(ListObject{name, content});
 
 }
 
@@ -64,12 +63,12 @@ fn displaylist(todoos: &Vec<ListObject>){
     clear().unwrap();
     println!("id: completed:  name:");
     for i in 0..todoos.len(){
-        if todoos[i].completed == false {
-            println!(" {}  [{}]     {}", i+1, todoos[i].completed, todoos[i].name);
-        }
-        else{
+        //if todoos[i].completed == false {
+            println!(" {}       {}", i+1, todoos[i].name);
+        //}
+        /*else{
             println!(" {}  [{}]      {}", i+1, todoos[i].completed, todoos[i].name);
-        }
+        }*/
     }
     std::io::stdout().flush().unwrap();
 }
@@ -104,13 +103,13 @@ fn removeeliment(todoos: &mut Vec<ListObject>){
         todoos.clear();
         return;
     }
-    else if inputbuffer.chars().nth(0).unwrap().to_ascii_lowercase() == 'd'{
+    /*else if inputbuffer.chars().nth(0).unwrap().to_ascii_lowercase() == 'd'{
         for i in (0..todoos.len()).rev() {
             if todoos[i].completed == true {
                 todoos.remove(i);
             }
         }
-    }
+    }*/
     let inputbuffer:u8 = match inputbuffer.trim().parse(){
         Ok(num) => num,
         Err(_) => return
@@ -121,7 +120,7 @@ fn removeeliment(todoos: &mut Vec<ListObject>){
     todoos.remove(inputbuffer as usize-1);
 }
 
-fn togglecompletion(todoos: &mut Vec<ListObject>){
+/*fn togglecompletion(todoos: &mut Vec<ListObject>){
     displaylist(todoos);
     let mut inputbuffer: String = String::new();
     print!("\nA for all.  todo ID: ");
@@ -149,11 +148,11 @@ fn togglecompletion(todoos: &mut Vec<ListObject>){
         todoos[inputbuffer as usize].completed = true;
     }
 }
-
+*/
 fn loadsaved(todoos: &mut Vec<ListObject>, save_path: &String){
     let mut buff:String = String::new();
     let mut name:String = String::new();
-    let mut data:String = String::new();
+    //let mut data:String = String::new();
     let filecontent: String = read_to_string(&save_path).unwrap();
     for i in filecontent.chars(){
         buff.push(i);
@@ -161,11 +160,17 @@ fn loadsaved(todoos: &mut Vec<ListObject>, save_path: &String){
             name = buff.clone();
             buff.clear();
         }
-        else if i=='║'{
-            data=buff.clone();
+        else if i == '\n'{
+            buff.pop();
+            name.pop();
+            todoos.push(ListObject{name:name.clone(), content:buff.clone()});
             buff.clear();
         }
-        else if i=='\n'{
+        /*else if i=='║'{
+            data=buff.clone();
+            buff.clear();
+        }*/
+        /*else if i=='\n'{
             let mut completed:bool = false;
             if buff.chars().count()-1 < 5 {
                 completed = true;
@@ -174,7 +179,7 @@ fn loadsaved(todoos: &mut Vec<ListObject>, save_path: &String){
             data.pop();
             todoos.push(ListObject{name:name.clone(), content:data.clone(), completed});
             buff.clear();
-        }
+        }*/
     }
     
 }
@@ -182,6 +187,6 @@ fn loadsaved(todoos: &mut Vec<ListObject>, save_path: &String){
 fn savetofile(todoos: &mut Vec<ListObject>, save_path: &String){
     let mut file = File::create(&save_path).unwrap();
     for i in todoos{
-        write!(file, "{}█{}║{}\n", i.name, i.content, i.completed).unwrap();
+        write!(file, "{}█{}\n", i.name, i.content).unwrap();
     }
 }
