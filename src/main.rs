@@ -1,4 +1,5 @@
 use clearscreen::{self, clear};
+use core::num;
 use std::io::{Read, Write};
 use std::fs:: read_to_string;
 use std::fs::File;
@@ -20,7 +21,7 @@ fn main() {
         savetofile(&mut todoos, &save_path);
         displaylist(&todoos);
         let mut inputbuffer:String = String::new();
-        println!("\n[A]dd [S]crap [D]isplay-content [F]inish-task");
+        println!("\n[A]dd [S]crap [D]isplay-content [F]edit");
         print!("command: ");
         std::io::stdout().flush().unwrap();
         std::io::stdin().read_line(&mut inputbuffer).unwrap();
@@ -36,13 +37,12 @@ fn main() {
             removeeliment(&mut todoos);
         }
         else if inputbuffer == 'f'{
-            //togglecompletion(&mut todoos);
+            editeliment(&mut todoos);
         }
     }
 }
 
 fn addtodo(todoos: &mut Vec<ListObject>){
-    //let completed:bool = false;
     let mut name:String = String::new();
     let mut content:String = String::new();
     print!("name: ");
@@ -61,14 +61,9 @@ fn addtodo(todoos: &mut Vec<ListObject>){
 
 fn displaylist(todoos: &Vec<ListObject>){
     clear().unwrap();
-    println!("id: completed:  name:");
+    println!("id:  name:");
     for i in 0..todoos.len(){
-        //if todoos[i].completed == false {
-            println!(" {}       {}", i+1, todoos[i].name);
-        //}
-        /*else{
-            println!(" {}  [{}]      {}", i+1, todoos[i].completed, todoos[i].name);
-        }*/
+        println!("{}  {}", i+1, todoos[i].name);
     }
     std::io::stdout().flush().unwrap();
 }
@@ -95,7 +90,7 @@ fn showcontents(todoos: &Vec<ListObject>){
 fn removeeliment(todoos: &mut Vec<ListObject>){
     displaylist(todoos);
     let mut inputbuffer: String = String::new();
-    print!("\nA for all. D for all done.   todo ID: ");
+    print!("\nA for all.   todo ID: ");
     std::io::stdout().flush().unwrap();
     std::io::stdin().read_line(&mut inputbuffer).unwrap();
     if inputbuffer.chars().nth(0).unwrap().to_ascii_lowercase() == 'a'
@@ -103,13 +98,6 @@ fn removeeliment(todoos: &mut Vec<ListObject>){
         todoos.clear();
         return;
     }
-    /*else if inputbuffer.chars().nth(0).unwrap().to_ascii_lowercase() == 'd'{
-        for i in (0..todoos.len()).rev() {
-            if todoos[i].completed == true {
-                todoos.remove(i);
-            }
-        }
-    }*/
     let inputbuffer:u8 = match inputbuffer.trim().parse(){
         Ok(num) => num,
         Err(_) => return
@@ -120,39 +108,42 @@ fn removeeliment(todoos: &mut Vec<ListObject>){
     todoos.remove(inputbuffer as usize-1);
 }
 
-/*fn togglecompletion(todoos: &mut Vec<ListObject>){
+fn editeliment(todoos: &mut Vec<ListObject>){
     displaylist(todoos);
     let mut inputbuffer: String = String::new();
-    print!("\nA for all.  todo ID: ");
+    print!("todo ID: ");
     std::io::stdout().flush().unwrap();
     std::io::stdin().read_line(&mut inputbuffer).unwrap();
-    if inputbuffer.chars().nth(0).unwrap().to_ascii_lowercase() == 'a'{
-        for i in 0..todoos.len(){
-            todoos[i].completed = true;
-        }
-        return;
-    }
-    let mut inputbuffer:u8 = match inputbuffer.trim().parse(){
+    let index:u8 = match inputbuffer.trim().parse() {
         Ok(num) => num,
-        Err(_) => return,
+        Err(_) => return
     };
-
-    if inputbuffer > todoos.len() as u8 || inputbuffer <= 0{
-        return;
+    let index: u8 = index-1;
+    if index > todoos.len() as u8 || index <= 0{return;}
+    
+    clear().unwrap();
+    inputbuffer.clear();
+    println!("current name: {}", todoos[index as usize].name);
+    print!("enter for no change. change name to: ");
+    std::io::stdout().flush().unwrap();
+    std::io::stdin().read_line(&mut inputbuffer).unwrap();
+    if inputbuffer != ""{
+        todoos[index as usize].name = inputbuffer.clone();
     }
-    inputbuffer-=1;
-    if todoos[inputbuffer as usize].completed == true{
-        todoos[inputbuffer as usize].completed = false;
-    }
-    else{
-        todoos[inputbuffer as usize].completed = true;
+    clear().unwrap();
+    inputbuffer.clear();
+    println!("current content: {}", todoos[index as usize].content);
+    print!("enter for no change. change content to: ");
+    std::io::stdout().flush().unwrap();
+    std::io::stdin().read_line(&mut inputbuffer).unwrap();
+    if inputbuffer != ""{
+        todoos[index as usize].content = inputbuffer.clone();
     }
 }
-*/
+
 fn loadsaved(todoos: &mut Vec<ListObject>, save_path: &String){
     let mut buff:String = String::new();
     let mut name:String = String::new();
-    //let mut data:String = String::new();
     let filecontent: String = read_to_string(&save_path).unwrap();
     for i in filecontent.chars(){
         buff.push(i);
@@ -166,20 +157,6 @@ fn loadsaved(todoos: &mut Vec<ListObject>, save_path: &String){
             todoos.push(ListObject{name:name.clone(), content:buff.clone()});
             buff.clear();
         }
-        /*else if i=='║'{
-            data=buff.clone();
-            buff.clear();
-        }*/
-        /*else if i=='\n'{
-            let mut completed:bool = false;
-            if buff.chars().count()-1 < 5 {
-                completed = true;
-            }
-            name.pop();
-            data.pop();
-            todoos.push(ListObject{name:name.clone(), content:data.clone(), completed});
-            buff.clear();
-        }*/
     }
     
 }
