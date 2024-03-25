@@ -62,7 +62,7 @@ fn displaylist(todoos: &Vec<ListObject>){
     clear().unwrap();
     println!("id:  name:");
     for i in 0..todoos.len(){
-        println!("{}  {}", i+1, todoos[i].name);
+        println!("{}    {}", i+1, todoos[i].name);
     }
     std::io::stdout().flush().unwrap();
 }
