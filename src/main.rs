@@ -1,9 +1,9 @@
-use clearscreen::{self, clear};
+use clearscreen;
 use std::io::{Read, Write};
 use std::fs:: read_to_string;
 use std::fs::File;
 use std::path::Path;
-use homedir::{self, get_my_home};
+use homedir;
 
 struct ListObject{
     name:String,
@@ -11,7 +11,7 @@ struct ListObject{
 }
 
 fn main() {
-    let mut save_path =get_my_home().unwrap().unwrap().to_string_lossy().to_string();
+    let mut save_path = homedir::get_my_home().unwrap().unwrap().to_string_lossy().to_string();
     save_path.push_str("/.config/ToDo_data");
     let mut todoos:Vec<ListObject> = Vec::new();
     if !Path::new(&save_path).exists(){savetofile(&mut todoos, &save_path);}
@@ -25,7 +25,7 @@ fn main() {
         std::io::stdout().flush().unwrap();
         std::io::stdin().read_line(&mut inputbuffer).unwrap();
         let inputbuffer:char = inputbuffer.chars().nth(0).unwrap().to_ascii_lowercase();
-        clear().unwrap();
+        clearscreen::clear().unwrap();
         if inputbuffer == 'a'{
             addtodo(&mut todoos);
         }
@@ -47,11 +47,11 @@ fn addtodo(todoos: &mut Vec<ListObject>){
     print!("name: ");
     std::io::stdout().flush().unwrap();
     std::io::stdin().read_line(&mut name).unwrap();
-    clear().unwrap();
+    clearscreen::clear().unwrap();
     print!("contnent: ");
     std::io::stdout().flush().unwrap();
     std::io::stdin().read_line(&mut content).unwrap();
-    clear().unwrap();
+    clearscreen::clear().unwrap();
     name.pop();
     content.pop();
     todoos.push(ListObject{name, content});
@@ -59,7 +59,7 @@ fn addtodo(todoos: &mut Vec<ListObject>){
 }
 
 fn displaylist(todoos: &Vec<ListObject>){
-    clear().unwrap();
+    clearscreen::clear().unwrap();
     println!("id:  name:");
     for i in 0..todoos.len(){
         println!("{}    {}", i+1, todoos[i].name);
@@ -120,7 +120,7 @@ fn editeliment(todoos: &mut Vec<ListObject>){
     let index: u8 = index-1;
     if index > todoos.len() as u8 /*|| index < 0*/{return;}
     
-    clear().unwrap();
+    clearscreen::clear().unwrap();
     inputbuffer.clear();
     println!("current name: {}", todoos[index as usize].name);
     print!("enter for no change. change name to: ");
@@ -130,7 +130,7 @@ fn editeliment(todoos: &mut Vec<ListObject>){
         inputbuffer.pop();
         todoos[index as usize].name = inputbuffer.clone();
     }
-    clear().unwrap();
+    clearscreen::clear().unwrap();
     inputbuffer.clear();
     println!("current content: {}", todoos[index as usize].content);
     print!("enter for no change. change content to: ");
