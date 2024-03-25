@@ -119,7 +119,7 @@ fn editeliment(todoos: &mut Vec<ListObject>){
         Err(_) => return
     };
     let index: u8 = index-1;
-    if index > todoos.len() as u8 || index <= 0{return;}
+    if index > todoos.len() as u8 /*|| index < 0*/{return;}
     
     clear().unwrap();
     inputbuffer.clear();
@@ -127,7 +127,8 @@ fn editeliment(todoos: &mut Vec<ListObject>){
     print!("enter for no change. change name to: ");
     std::io::stdout().flush().unwrap();
     std::io::stdin().read_line(&mut inputbuffer).unwrap();
-    if inputbuffer != ""{
+    if inputbuffer != "\n"{
+        inputbuffer.pop();
         todoos[index as usize].name = inputbuffer.clone();
     }
     clear().unwrap();
@@ -136,7 +137,8 @@ fn editeliment(todoos: &mut Vec<ListObject>){
     print!("enter for no change. change content to: ");
     std::io::stdout().flush().unwrap();
     std::io::stdin().read_line(&mut inputbuffer).unwrap();
-    if inputbuffer != ""{
+    if inputbuffer != "\n"{
+        inputbuffer.pop();
         todoos[index as usize].content = inputbuffer.clone();
     }
 }
