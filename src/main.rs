@@ -12,7 +12,7 @@ struct ListObject{
 
 fn main() {
     let mut save_path =get_my_home().unwrap().unwrap().to_string_lossy().to_string();
-    save_path.push_str("/.config/ToDo_dataBETA");
+    save_path.push_str("/.config/ToDo_data");
     let mut todoos:Vec<ListObject> = Vec::new();
     if !Path::new(&save_path).exists(){savetofile(&mut todoos, &save_path);}
     else{loadsaved(&mut todoos, &save_path);}
