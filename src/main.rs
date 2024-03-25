@@ -1,5 +1,4 @@
 use clearscreen::{self, clear};
-use core::num;
 use std::io::{Read, Write};
 use std::fs:: read_to_string;
 use std::fs::File;
@@ -21,7 +20,7 @@ fn main() {
         savetofile(&mut todoos, &save_path);
         displaylist(&todoos);
         let mut inputbuffer:String = String::new();
-        println!("\n[A]dd [S]crap [D]isplay-content [F]edit");
+        println!("\n[A]dd [S]crap [D]isplay-content modi[F]y");
         print!("command: ");
         std::io::stdout().flush().unwrap();
         std::io::stdin().read_line(&mut inputbuffer).unwrap();
