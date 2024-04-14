@@ -10,8 +10,8 @@ struct ListObject{
 }
 
 fn main() {
-    let mut save_path = homedir::get_my_home().unwrap().unwrap().to_string_lossy().to_string();
-    save_path.push_str("/.config/ToDo_data");
+    let mut save_path:String = homedir::get_my_home().unwrap().unwrap().to_string_lossy().to_string();
+    save_path.push_str("/.myprograms/ToDo_data");
     let mut todoos:Vec<ListObject> = Vec::new();
     if !Path::new(&save_path).exists(){savetofile(&mut todoos, &save_path);}
     else{loadsaved(&mut todoos, &save_path);}
@@ -154,7 +154,7 @@ fn loadsaved(todoos: &mut Vec<ListObject>, save_path: &String){
         else if i == '\n'{
             buff.pop();
             name.pop();
-            todoos.push(ListObject{name:name.clone(), content:buff.clone()});
+            todoos.push(ListObject{name:String::from(&name), content:String::from(&buff)});
             buff.clear();
         }
     }
